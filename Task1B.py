@@ -19,3 +19,7 @@ def run():
     print(output[:10])
     print('furthest')
     print(output[-10:])
+
+if __name__ == "__main__":
+    print("*** Task 1B: CUED Part IA Flood Warning System ***")
+    run()
