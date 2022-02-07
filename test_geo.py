@@ -1,9 +1,9 @@
 """Unit test for geo module"""
 
-from floodsystem.geo import stations_by_distance
-from floodsystem.geo import stations_within_radius
+from floodsystem.geo import *
 from floodsystem.stationdata import build_station_list
 from floodsystem.station import MonitoringStation
+from random import randint
 
 def test_stations_by_distance():
     """Tests stations_by_distance function"""
@@ -35,8 +35,40 @@ def test_stations_within_radius():
                 distance = stations_by_distance([station],(52.2053, 0.1218))[0][1]
                 assert distance < 5
                 break
-    
-    
 
 
-     
+def test_rivers_with_stations():
+    """Tests rivers_with_stations function"""
+    test_rivers = [f'river_{x}' for x in range(10)]
+    # make sure rivers will be in same order as out
+    test_rivers = sorted(test_rivers)
+    test_stations = [MonitoringStation(0, 0, 0, (15,15), 0, test_rivers[randint(0, 9)], 0) for n in range(100)]
+    
+    out_rivers = rivers_with_station(test_stations)
+    out_rivers = sorted(out_rivers)
+    assert out_rivers == test_rivers
+
+
+def test_stations_by_river():
+    """Tests stations_by_river function"""
+    test_rivers = [f'river_{x}' for x in range(10)]
+    test_stations = [MonitoringStation(0, 0, 0, (15,15), 0, test_rivers[n], 0) for n in range(10)]
+    out = stations_by_river(test_stations)
+    i = list(out.items())
+    for n in range(10):
+        assert i[n][0] == test_rivers[n]
+        print(str(i[n][1]))
+        print(str(test_stations[n]))
+        assert str(i[n][1]) == str([test_stations[n]])
+
+def test_rivers_by_station_number():
+    """Tests rivers_by_station_number function"""
+    test_rivers = [f'river_{x}' for x in range(10)]
+    test_stations = [MonitoringStation(0, 0, 0, (15,15), 0, test_rivers[n % len(test_rivers)], 0) for n in range(14)]
+    out_1 = rivers_by_station_number(test_stations, 4)  
+    print(out_1)
+    
+    assert len(out_1) == 4 
+    assert out_1[0] == ("river_0", 2)
+
+    assert len(rivers_by_station_number(test_stations, 5)) == 10      
