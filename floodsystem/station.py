@@ -48,6 +48,8 @@ class MonitoringStation:
         return high >= low
 
 def inconsistent_typical_range_stations(stations):
+    """Returns names of all inconsistent stations
+    of the ones passed to the function in a list"""
     output = []
     for station in stations:
         if not station.typical_range_consistent():
