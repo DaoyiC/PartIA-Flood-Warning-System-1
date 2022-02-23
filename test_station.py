@@ -51,3 +51,4 @@ def test_inconsistent_typical_range_stations():
     assert len(inconsistent_typical_range_stations([test4])) == 1
 
     assert len(inconsistent_typical_range_stations([test1,test2,test3,test4])) == 2
+
