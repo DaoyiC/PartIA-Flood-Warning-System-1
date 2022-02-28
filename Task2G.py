@@ -4,13 +4,16 @@ from floodsystem.plot import plot_water_level_with_fit
 from floodsystem.datafetcher import fetch_measure_levels
 from floodsystem.analysis import polyfit
 from matplotlib.dates import date2num
+from datetime import timedelta
 
 def calcRisk(station):
-    dates, levels = fetch_measure_levels(station.measure_id, 10)
-    poly, offset = polyfit(dates, levels, 4)
+    backdate = timedelta(days=10)
+    dates, levels = fetch_measure_levels(station.measure_id, backdate)
+    poly, offset = polyfit(date2num(dates), levels, 4)
     current_rel = station.relative_water_level()
-    predicted = (poly(dates[-1] - offset + 1) - station.typical_range) / station.typical_range
-    risk = current_rel * predicted 
+    pred = poly(date2num(dates[0]) + 1 - offset)
+    pred_rel = (pred - station.typical_range[1]) / station.typical_range[1]
+    risk = current_rel * pred_rel 
     return risk
 
 RISK_THRESHOLD = 1.3
@@ -23,7 +26,5 @@ if __name__ == "__main__":
     highest = stations_highest_rel_level(stations, 25)
     risks = [(s, calcRisk(s)) for s in highest]
     at_risk = [s for s in filter(riskFilter, risks)]
-    
-    msg = [f'{s[0]} at risk, risk level: {s[1]}' for s in at_risk]
-
-    print("\r\n".join(msg))
+    for station in at_risk:
+        print(f'{station[0].name} at risk, risk level: {station[1]}')

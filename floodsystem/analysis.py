@@ -3,7 +3,7 @@ from numpy import polyfit as pf
 
 def polyfit(dates,levels, p):
     """computes polynomial of best fit for data of degree p"""
-    offset = dates[0]
+    offset = dates[-1]
     dates = dates - offset
     coefs = pf(dates, levels, p)
     poly = poly1d(coefs)
