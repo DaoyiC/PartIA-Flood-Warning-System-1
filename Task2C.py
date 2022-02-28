@@ -13,11 +13,11 @@ def run():
     # Update latest level data for all stations
     update_water_levels(stations)
 
-    stations = stations_highest_rel_level(stations, 10) 
+    stations = stations_highest_rel_level(stations, 20) 
     
     for station in stations:
         
-        print(station[0].name,station[1])
+        print(station.name,station.relative_water_level())
 
 
 if __name__ == "__main__":

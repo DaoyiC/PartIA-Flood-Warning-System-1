@@ -1,7 +1,11 @@
+from floodsystem.datafetcher import *
+from floodsystem.stationdata import update_water_levels
+
 
 def stations_level_over_threshold(stations, tol):
     """returns all stations that have a relative water level above 'tol'"""
     final = []
+    update_water_levels(stations) 
     for station in stations:
         relative = station.relative_water_level()
         if relative:
@@ -14,5 +18,6 @@ def stations_level_over_threshold(stations, tol):
 def stations_highest_rel_level(stations, N):
     """returns 'N' stations with the highest relative water level"""
     stations = stations_level_over_threshold(stations,0)
-    stations = stations[:N]
-    return stations
+    station = [stations[i][0] for i in range(N)]
+    
+    return station
